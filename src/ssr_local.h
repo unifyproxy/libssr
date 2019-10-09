@@ -6,6 +6,9 @@
 #include <config.h>
 #include <common.h>
 #include <local.h>
+#include <encrypt.h>
+#include <shadowsocks.h>
+#include <utils.h>
 
 #include <getopt.h>
 
@@ -15,7 +18,6 @@ struct option ssr_option[] = {
         {"port",         required_argument, 0, 'p'},
         {"lport",        required_argument, 0, 'l'},
         {"passwd",       required_argument, 0, 'P'},
-        {"pid",          required_argument, 0, 'I'},
         {"timeout",      required_argument, 0, 't'},
         {"method",       required_argument, 0, 'm'},
 
@@ -32,7 +34,7 @@ enum METHOD_e {
     M_RC4_MD5,
 
     // AES Family
-    M_AES_128_CFB,
+            M_AES_128_CFB,
     M_AES_192_CFB,
     M_AES_256_CFB,
     M_AES_128_CTR,
@@ -42,7 +44,7 @@ enum METHOD_e {
     M_BF_CFB,
 
     // CAMELLIA Family
-    M_CAMELLIA_128_CFB,
+            M_CAMELLIA_128_CFB,
     M_CAMELLIA_192_CFB,
     M_CAMELLIA_256_CFB,
 
@@ -54,7 +56,7 @@ enum METHOD_e {
     M_chacha20_ietf,
 };
 
-const char *METHOD_STR = {
+const char **METHOD_STR = {
         "table", "rc4", "rc4-md5",
         "aes-128-cfb", "aes-192-cfb", "aes-256-cfb",
         "aes-128-ctr", "aes-192-ctr", "aes-256-ctr",
@@ -63,6 +65,33 @@ const char *METHOD_STR = {
         "idea-cfb", "rc2-cfb", "seed-cfb", "salsa20",
         "chacha20", "chacha20-ietf"
 };
+
+const char **METHOD_STR2 =
+        {
+                "none",
+                "table",
+                "rc4",
+                "rc4-md5-6",
+                "rc4-md5",
+                "aes-128-cfb",
+                "aes-192-cfb",
+                "aes-256-cfb",
+                "aes-128-ctr",
+                "aes-192-ctr",
+                "aes-256-ctr",
+                "bf-cfb",
+                "camellia-128-cfb",
+                "camellia-192-cfb",
+                "camellia-256-cfb",
+                "cast5-cfb",
+                "des-cfb",
+                "idea-cfb",
+                "rc2-cfb",
+                "seed-cfb",
+                "salsa20",
+                "chacha20",
+                "chacha20-ietf"
+        };
 
 enum PROTOCOL_e {
     P_ORIGIN,
@@ -87,5 +116,22 @@ enum OBFS_e {
     O_TLS12_TICKET_AUTH,
     O_TLS12_TICKET_FASTAUTH
 };
+
+
+typedef struct {
+    char* server;
+    int server_port;
+    char* password;
+    char* method;
+
+    char* protocol;
+    char* protocol_arg;
+    char* obfs;
+    char* obfs_arg;
+
+    char* local;
+    int local_port;
+} ssr_server_t;
+
 
 #endif // _SSR_LOCAL_H

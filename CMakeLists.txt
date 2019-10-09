@@ -5,6 +5,9 @@ set(ssr_prefix ./shadowsocksr-libev)
 
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/shadowsocksr-libev/cmake)
 
+set(with_crypto_library "openssl" CACHE STRING "build with the given crypto library, TYPE=openssl|polarssl|mbedtls default=openssl")
+
+
 include ( dist )
 include ( configure )
 
